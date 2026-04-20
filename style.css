@@ -25,8 +25,15 @@ header {
 
 .logo {
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.logo span {
   color: #00e054;
+  margin-left: 0;
 }
 
 nav a {
