@@ -1,15 +1,39 @@
 .hero {
-  min-height: calc(100vh - 76px);
+  position: relative;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: 50px;
+  overflow: visible;
   background-image:
     linear-gradient(to bottom, rgba(18, 18, 18, 0.4), #121212),
     url("../img/pragmata.jpg");
   background-size: cover;
   background-position: center top;
+  margin-bottom: 250px;
+}
+
+.hero-content {
+  z-index: 5;
+}
+
+.hero-trending {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  transform: translateY(170px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero-trending h3 {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
 }
 
 .hero-content h1 {
@@ -26,6 +50,15 @@
   color: #e0e0e0;
   margin-bottom: 30px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Container dos posters */
+.hero-posters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+  pointer-events: auto;
 }
 
 .btn-cta {
@@ -48,15 +81,6 @@
   background-color: #00e054;
 }
 
-/* Container dos posters */
-.hero-posters {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 50px;
-  flex-wrap: wrap; /* Permite quebrar linha em telas menores */
-}
-
 /* A caixa individual de cada poster */
 .poster-box {
   position: relative;
@@ -67,7 +91,9 @@
   cursor: pointer;
   border: 2px solid transparent;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .poster-box img {
@@ -123,7 +149,9 @@
   white-space: nowrap; /* Impede que o texto quebre em duas linhas */
   opacity: 0;
   pointer-events: none; /* Impede que o balão interfira no clique */
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   z-index: 10;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
@@ -140,7 +168,9 @@
   border-color: #444 transparent transparent transparent;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   z-index: 10;
 }
 
