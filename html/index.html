@@ -14,9 +14,9 @@
     <header>
         <div class="logo">END<span>SCREEN</span></div>
         <nav>
-            <a href="#cadastro">Cadastrar</a>
-            <a href="#biblioteca">Minha Lista</a>
-            <a href="#login" class="nav-login">Login</a>
+            <a href="javascript:void(0)" onclick="openNewGameForm()">Cadastrar</a>
+            <a href="javascript:void(0)" onclick="openModal('modal-biblioteca')">Minha Lista</a>
+            <a href="javascript:void(0)" onclick="openModal('modal-login')" class="nav-login">Login</a>
         </nav>
     </header>
 
@@ -25,7 +25,7 @@
             <div class="hero-content">
                 <h1>A última tela do seu jogo.</h1>
                 <p>Documente sua jornada, da primeira fase aos créditos finais.</p>
-                <a href="#cadastro" class="btn-cta">Registrar Jogo</a>
+                <a href="javascript:void(0)" onclick="openNewGameForm()" class="btn-cta">Registrar Jogo</a>
             </div>
 
             <div class="hero-trending">
@@ -81,96 +81,108 @@
                 </div>
             </div>
         </section>
-
-        <section id="cadastro" class="container">
-            <h2>Adicionar Jogo</h2>
-
-            <form action="#">
-                <div class="form-group">
-                    <label for="game-name">Nome do Jogo</label>
-                    <input type="text" id="game-name" placeholder="Ex: Resident Evil 4" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="platform">Onde você jogou?</label>
-                    <select id="platform" required>
-                        <option value="">Selecione a plataforma</option>
-
-                        <option value="pc">PC / Computador</option>
-
-                        <optgroup label="PlayStation">
-                            <option value="ps5">PlayStation 5</option>
-                            <option value="ps4">PlayStation 4</option>
-                            <option value="ps3">PlayStation 3</option>
-                            <option value="ps2">PlayStation 2</option>
-                            <option value="ps1">PlayStation 1 / PSX</option>
-                            <option value="ps_portatil">PSP / PS Vita</option>
-                        </optgroup>
-
-                        <optgroup label="Xbox">
-                            <option value="xbox_series">Xbox Series X|S</option>
-                            <option value="xbox_one">Xbox One</option>
-                            <option value="xbox_360">Xbox 360</option>
-                            <option value="xbox_original">Xbox Clássico</option>
-                        </optgroup>
-
-                        <optgroup label="Nintendo">
-                            <option value="switch">Nintendo Switch</option>
-                            <option value="wiiu">Wii U</option>
-                            <option value="wii">Wii</option>
-                            <option value="gamecube">GameCube</option>
-                            <option value="n64">Nintendo 64</option>
-                            <option value="snes">Super Nintendo (SNES)</option>
-                            <option value="nes">Nintendinho (NES)</option>
-                            <option value="ds_3ds">Nintendo DS / 3DS</option>
-                            <option value="gameboy">Game Boy / GBA</option>
-                        </optgroup>
-
-                        <optgroup label="Sega">
-                            <option value="dreamcast">Dreamcast</option>
-                            <option value="saturn">Sega Saturn</option>
-                            <option value="mega_drive">Mega Drive / Genesis</option>
-                            <option value="master_system">Master System</option>
-                        </optgroup>
-
-                        <optgroup label="Outros">
-                            <option value="mobile">Mobile (Android / iOS)</option>
-                            <option value="arcade">Arcade / Fliperama</option>
-                            <option value="atari">Atari</option>
-                            <option value="outro">Outro / Emulador</option>
-                        </optgroup>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="rating">Sua Nota (0 a 10)</label>
-                    <input type="number" id="rating" min="0" max="10" placeholder="Nota de 0 a 10" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="hours">Horas gastas (Opcional)</label>
-                    <input type="number" id="hours" min="0" placeholder="Quantidade de horas">
-                </div>
-
-                <div class="form-group">
-                    <label for="review">Análise / Avaliação</label>
-                    <textarea id="review" rows="4" placeholder="O que achou do jogo?"></textarea>
-                </div>
-
-                <button type="submit">Salvar Jogo</button>
-            </form>
-        </section>
-
-        <section id="biblioteca">
-            <div class="games-section-header">
-                <h2>Meus Jogos Salvos</h2>
-            </div>
-
-            <div class="games-grid" id="jogos-lista">
-                <p class="empty-message">Nenhum jogo registrado na sua biblioteca.</p>
-            </div>
-        </section>
     </main>
+
+    <div class="modal-overlay" id="modal-cadastro">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-cadastro')">&times;</span>
+
+            <section class="container" id="cadastro">
+                <h2 id="modal-title">Adicionar Jogo</h2>
+
+                <form action="#">
+                    <div class="form-group">
+                        <label for="game-name">Nome do Jogo</label>
+                        <input type="text" id="game-name" placeholder="Ex: Resident Evil 4" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="platform">Onde você jogou?</label>
+                        <select id="platform" required>
+                            <option value="">Selecione a plataforma</option>
+
+                            <option value="pc">PC / Computador</option>
+
+                            <optgroup label="PlayStation">
+                                <option value="ps5">PlayStation 5</option>
+                                <option value="ps4">PlayStation 4</option>
+                                <option value="ps3">PlayStation 3</option>
+                                <option value="ps2">PlayStation 2</option>
+                                <option value="ps1">PlayStation 1 / PSX</option>
+                                <option value="ps_portatil">PSP / PS Vita</option>
+                            </optgroup>
+
+                            <optgroup label="Xbox">
+                                <option value="xbox_series">Xbox Series X|S</option>
+                                <option value="xbox_one">Xbox One</option>
+                                <option value="xbox_360">Xbox 360</option>
+                                <option value="xbox_original">Xbox Clássico</option>
+                            </optgroup>
+
+                            <optgroup label="Nintendo">
+                                <option value="switch">Nintendo Switch</option>
+                                <option value="wiiu">Wii U</option>
+                                <option value="wii">Wii</option>
+                                <option value="gamecube">GameCube</option>
+                                <option value="n64">Nintendo 64</option>
+                                <option value="snes">Super Nintendo (SNES)</option>
+                                <option value="nes">Nintendinho (NES)</option>
+                                <option value="ds_3ds">Nintendo DS / 3DS</option>
+                                <option value="gameboy">Game Boy / GBA</option>
+                            </optgroup>
+
+                            <optgroup label="Sega">
+                                <option value="dreamcast">Dreamcast</option>
+                                <option value="saturn">Sega Saturn</option>
+                                <option value="mega_drive">Mega Drive / Genesis</option>
+                                <option value="master_system">Master System</option>
+                            </optgroup>
+
+                            <optgroup label="Outros">
+                                <option value="mobile">Mobile (Android / iOS)</option>
+                                <option value="arcade">Arcade / Fliperama</option>
+                                <option value="atari">Atari</option>
+                                <option value="outro">Outro / Emulador</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating">Sua Nota (0 a 10)</label>
+                        <input type="number" id="rating" min="0" max="10" placeholder="Nota de 0 a 10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hours">Horas gastas (Opcional)</label>
+                        <input type="number" id="hours" min="0" placeholder="Quantidade de horas">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review">Análise / Avaliação</label>
+                        <textarea id="review" rows="4" placeholder="O que achou do jogo?"></textarea>
+                    </div>
+
+                    <button type="submit">Salvar Jogo</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-biblioteca">
+        <div class="modal-content modal-large">
+            <span class="close-btn" onclick="closeModal('modal-biblioteca')">&times;</span>
+
+            <section id="biblioteca">
+                <div class="games-section-header">
+                    <h2>Meus Jogos Salvos</h2>
+                </div>
+
+                <div class="games-grid" id="jogos-lista">
+                    <p class="empty-message">Nenhum jogo registrado na sua biblioteca.</p>
+                </div>
+            </section>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2026 ENDSCREEN. Todos os direitos reservados.</p>

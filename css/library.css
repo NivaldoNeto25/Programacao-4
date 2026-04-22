@@ -10,10 +10,9 @@
 }
 
 .games-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  justify-content: center;
 }
 
 .empty-message {
@@ -27,7 +26,7 @@
   border: 1px solid #333;
   border-radius: 8px;
   padding: 20px;
-  width: 300px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;

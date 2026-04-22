@@ -1,3 +1,5 @@
+// CRUD
+
 let myGames = [];
 let currentEditId = null;
 
@@ -37,7 +39,7 @@ formElement.addEventListener("submit", function (event) {
 
   renderGames();
 
-  document.getElementById("jogos-lista").scrollIntoView({ behavior: "smooth" });
+  closeModal("modal-cadastro");
 });
 
 function renderGames() {
@@ -90,14 +92,52 @@ function editGame(gameId) {
   if (gameToEdit) {
     currentEditId = gameId;
 
+    document.getElementById("modal-title").innerText = "Editar Jogo";
     document.getElementById("game-name").value = gameToEdit.name;
     document.getElementById("platform").value = gameToEdit.platform;
     document.getElementById("rating").value = gameToEdit.rating;
     document.getElementById("hours").value = gameToEdit.hours;
     document.getElementById("review").value = gameToEdit.review;
 
-    document.getElementById("cadastro").scrollIntoView({ behavior: "smooth" });
+    closeModal("modal-biblioteca");
+    openModal("modal-cadastro");
 
     renderGames();
   }
+}
+
+// MODAL
+
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".modal-content").scrollTop = 0;
+  }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove("active");
+    document.body.style.overflow = "auto";
+  }
+}
+
+window.addEventListener("click", (event) => {
+  if (event.target.classList.contains("modal-overlay")) {
+    event.target.classList.remove("active");
+    document.body.style.overflow = "auto";
+  }
+});
+
+function openNewGameForm() {
+  currentEditId = null;
+  formElement.reset();
+
+  document.getElementById("modal-title").innerText = "Adicionar Jogo";
+  formElement.querySelector('button[type="submit"]').innerText = "Salvar Jogo";
+
+  openModal("modal-cadastro");
 }
