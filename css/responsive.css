@@ -1,7 +1,13 @@
+@media screen and (max-width: 992px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media screen and (max-width: 768px) {
   header {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     padding: 15px;
   }
 
@@ -10,19 +16,17 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
   }
 
   nav a {
     margin-left: 0;
-    display: flex;
-    align-items: center;
-    height: 35px;
-    line-height: 1;
+    font-size: 13px;
   }
 
   .nav-login {
     height: auto;
+    padding: 6px 12px;
   }
 
   .hero-content h1 {
@@ -34,13 +38,61 @@
     padding: 0 15px;
   }
 
-  .container {
-    margin: 0 15px 50px 15px;
-    padding: 20px;
+  .hero-trending {
+    transform: translateY(100px);
+  }
+
+  .poster-box {
+    width: 90px;
+  }
+
+  .poster-box::after,
+  .poster-box::before {
+    display: none;
+  }
+
+  .modal-content {
+    padding: 20px 15px;
+    width: 95%;
+  }
+
+  .close-btn {
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
   }
 
   .game-card {
-    width: 100%;
-    max-width: 100%;
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 615px) {
+  .hero-content {
+    margin-bottom: 160px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+
+  .hero-posters {
+    gap: 8px;
+  }
+
+  .poster-box {
+    width: 70px;
   }
 }
