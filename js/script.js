@@ -40,6 +40,8 @@ formElement.addEventListener("submit", function (event) {
   renderGames();
 
   closeModal("modal-cadastro");
+
+  renderReviews();
 });
 
 function renderGames() {
@@ -140,4 +142,51 @@ function openNewGameForm() {
   formElement.querySelector('button[type="submit"]').innerText = "Salvar Jogo";
 
   openModal("modal-cadastro");
+}
+
+// Função para renderizar a seção estilo Letterboxd na página principal
+function renderReviews() {
+    const reviewsContainer = document.getElementById('reviews-list');
+    if (!reviewsContainer) return; // Se não achar a div, ignora
+
+    reviewsContainer.innerHTML = '';
+
+    // Filtra apenas os jogos que têm algum texto na caixa de review
+    const gamesWithReviews = myGames.filter(game => game.review && game.review.trim() !== "");
+
+    if (gamesWithReviews.length === 0) {
+        reviewsContainer.innerHTML = '<p class="empty-message">Nenhuma review registrada ainda. Jogue algo e conte para nós!</p>';
+        return;
+    }
+
+    // Inverte o array para mostrar as últimas reviews adicionadas no topo
+    const reversedGames = [...gamesWithReviews].reverse();
+
+    reversedGames.forEach(game => {
+        // Lógica para transformar sua nota de 0 a 10 em 5 estrelinhas
+        const starCount = Math.round(game.rating / 2);
+        const starsHTML = '★'.repeat(starCount); 
+
+        const reviewEl = document.createElement('div');
+        reviewEl.classList.add('review-item');
+        
+        // Monta o HTML idêntico ao estilo criado no CSS
+        reviewEl.innerHTML = `
+            <div class="review-poster-placeholder">🎮</div>
+            <div class="review-content">
+                <div class="review-title-row">
+                    <span class="review-game-title">${game.name}</span>
+                </div>
+                <div class="review-meta">
+                    <span class="review-author-avatar"></span>
+                    <span class="review-author-name">Você</span>
+                    <span class="review-stars">${starsHTML}</span>
+                </div>
+                <p class="review-text">"${game.review}"</p>
+                <div class="review-likes"><span>❤️</span> 0 curtidas</div>
+            </div>
+        `;
+        
+        reviewsContainer.appendChild(reviewEl);
+    });
 }
