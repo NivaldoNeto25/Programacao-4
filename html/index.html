@@ -196,7 +196,37 @@
         </div>
     </div>
 
-    
+    <div class="modal-overlay" id="modal-login">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-login')">&times;</span>
+            <section class="container" style="margin-bottom: 0;">
+                <h2 id="auth-title">Login</h2>
+                
+                <form id="auth-form">
+                    <div class="form-group" id="group-nome" style="display: none;">
+                        <label for="auth-nome">Seu Nome</label>
+                        <input type="text" id="auth-nome" placeholder="Como quer ser chamado?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth-email">E-mail</label>
+                        <input type="email" id="auth-email" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth-senha">Senha</label>
+                        <input type="password" id="auth-senha" placeholder="Sua senha secreta" required>
+                    </div>
+
+                    <button type="submit" id="auth-btn">Entrar</button>
+                    
+                    <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                        <a href="javascript:void(0)" id="auth-toggle" style="color: #00e054; text-decoration: none;">Não tem conta? Registre-se</a>
+                    </p>
+                </form>
+            </section>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2026 ENDSCREEN. Todos os direitos reservados.</p>

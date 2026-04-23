@@ -1,10 +1,106 @@
 // CRUD
+let myGames = JSON.parse(localStorage.getItem('myGames')) || [];
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
-let myGames = [];
+// Função universal para salvar tudo no navegador
+function saveData() {
+    localStorage.setItem('myGames', JSON.stringify(myGames));
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+}
+
 let currentEditId = null;
 
 const formElement = document.querySelector("#cadastro form");
 const cardsContainer = document.querySelector(".games-grid");
+
+// === SISTEMA DE AUTENTICAÇÃO ===
+let isLoginMode = true;
+const authForm = document.getElementById('auth-form');
+const authToggle = document.getElementById('auth-toggle');
+const groupNome = document.getElementById('group-nome');
+const authTitle = document.getElementById('auth-title');
+const authBtn = document.getElementById('auth-btn');
+
+// Alterna entre a tela de Login e a tela de Registro
+authToggle.addEventListener('click', () => {
+    isLoginMode = !isLoginMode;
+    if (isLoginMode) {
+        groupNome.style.display = 'none';
+        authTitle.innerText = 'Login';
+        authBtn.innerText = 'Entrar';
+        authToggle.innerText = 'Não tem conta? Registre-se';
+        document.getElementById('auth-nome').removeAttribute('required');
+    } else {
+        groupNome.style.display = 'block';
+        authTitle.innerText = 'Criar Conta';
+        authBtn.innerText = 'Cadastrar';
+        authToggle.innerText = 'Já tem conta? Faça Login';
+        document.getElementById('auth-nome').setAttribute('required', 'true');
+    }
+});
+
+// Intercepta o envio do formulário de Login/Registro
+authForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('auth-email').value;
+    const senha = document.getElementById('auth-senha').value;
+    const nome = document.getElementById('auth-nome').value;
+
+    if (isLoginMode) {
+        // LÓGICA DE LOGIN: Procura um usuário com o mesmo email e senha
+        const userFound = users.find(u => u.email === email && u.senha === senha);
+        if (userFound) {
+            currentUser = userFound;
+            saveData();
+            updateHeader();
+            renderGames();
+            renderReviews();
+            closeModal('modal-login');
+            alert(`Bem-vindo de volta, ${currentUser.nome}!`);
+        } else {
+            alert('E-mail ou senha incorretos.');
+        }
+    } else {
+        // LÓGICA DE REGISTRO: Verifica se o e-mail já existe
+        const emailExists = users.find(u => u.email === email);
+        if (emailExists) {
+            alert('Este e-mail já está em uso!');
+            return;
+        }
+        // Cria o usuário com um ID incremental/timestamp
+        const newUser = { id: Date.now(), nome: nome, email: email, senha: senha };
+        users.push(newUser);
+        currentUser = newUser; // Já loga o usuário automaticamente
+        saveData();
+        updateHeader();
+        renderGames();
+        renderReviews();
+        closeModal('modal-login');
+        alert('Conta criada com sucesso!');
+    }
+    authForm.reset();
+});
+
+// Atualiza o botão de Login no Header e a ação dele
+function updateHeader() {
+    const navLogin = document.querySelector('.nav-login');
+    if (currentUser) {
+        navLogin.innerText = `Sair (${currentUser.nome})`;
+        navLogin.onclick = () => {
+            currentUser = null;
+            saveData();
+            updateHeader();
+            renderGames();
+            renderReviews();
+            alert('Você saiu da sua conta.');
+        };
+    } else {
+        navLogin.innerText = 'Login';
+        navLogin.onclick = () => openModal('modal-login');
+    }
+}
 
 formElement.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -17,6 +113,8 @@ formElement.addEventListener("submit", function (event) {
 
   const newGame = {
     id: currentEditId ? currentEditId : Date.now(),
+    userId: currentUser.id,
+    userName: currentUser.nome,
     name: inputName,
     platform: inputPlatform,
     rating: inputRating,
@@ -37,6 +135,8 @@ formElement.addEventListener("submit", function (event) {
 
   formElement.reset();
 
+  saveData();
+
   renderGames();
 
   closeModal("modal-cadastro");
@@ -47,6 +147,12 @@ formElement.addEventListener("submit", function (event) {
 function renderGames() {
   cardsContainer.innerHTML = "";
 
+  // 1. Se não tiver ninguém logado, mostra mensagem padrão
+  if (!currentUser) {
+    cardsContainer.innerHTML = '<p class="empty-message">Faça login para ver sua biblioteca.</p>';
+    return;
+  }
+
   const submitButton = formElement.querySelector('button[type="submit"]');
 
   if (currentEditId !== null) {
@@ -55,13 +161,19 @@ function renderGames() {
     submitButton.innerText = "Salvar Jogo";
   }
 
-  if (myGames.length === 0) {
-    cardsContainer.innerHTML =
-      '<p class="empty-message">Nenhum jogo registrado na sua biblioteca.</p>';
+  // 2. FILTRO MÁGICO: Pega o array completo, mas separa só os jogos do usuário atual
+  const userGames = myGames.filter(function (game) {
+      return game.userId === currentUser.id;
+  });
+
+  // 3. Verifica se O USUÁRIO tem jogos, e não o array global
+  if (userGames.length === 0) {
+    cardsContainer.innerHTML = '<p class="empty-message">Nenhum jogo registrado na sua biblioteca.</p>';
     return;
   }
 
-  myGames.forEach(function (game) {
+  // 4. Faz o loop apenas nos jogos do usuário (userGames em vez de myGames)
+  userGames.forEach(function (game) {
     const card = document.createElement("div");
     card.classList.add("game-card");
 
@@ -84,6 +196,7 @@ function deleteGame(gameId) {
   myGames = myGames.filter(function (game) {
     return game.id !== gameId;
   });
+  saveData();
   renderGames();
 }
 
@@ -104,6 +217,7 @@ function editGame(gameId) {
     closeModal("modal-biblioteca");
     openModal("modal-cadastro");
 
+    saveData();
     renderGames();
   }
 }
@@ -135,13 +249,17 @@ window.addEventListener("click", (event) => {
 });
 
 function openNewGameForm() {
-  currentEditId = null;
-  formElement.reset();
+    // Se não tiver ninguém logado, barra a ação e abre o Login
+    if (!currentUser) {
+        openModal('modal-login');
+        return; 
+    }
 
-  document.getElementById("modal-title").innerText = "Adicionar Jogo";
-  formElement.querySelector('button[type="submit"]').innerText = "Salvar Jogo";
-
-  openModal("modal-cadastro");
+    currentEditId = null;
+    formElement.reset();
+    document.getElementById("modal-title").innerText = "Adicionar Jogo";
+    formElement.querySelector('button[type="submit"]').innerText = "Salvar Jogo";
+    openModal("modal-cadastro");
 }
 
 // Função para renderizar a seção estilo Letterboxd na página principal
@@ -159,10 +277,11 @@ function renderReviews() {
         return;
     }
 
-    // Inverte o array para mostrar as últimas reviews adicionadas no topo
     const reversedGames = [...gamesWithReviews].reverse();
 
-    reversedGames.forEach(game => {
+    const ultimasReviews = reversedGames.slice(0, 5);
+
+    ultimasReviews.forEach(game => {
         // Lógica para transformar sua nota de 0 a 10 em 5 estrelinhas
         const starCount = Math.round(game.rating / 2);
         const starsHTML = '★'.repeat(starCount); 
@@ -179,7 +298,7 @@ function renderReviews() {
                 </div>
                 <div class="review-meta">
                     <span class="review-author-avatar"></span>
-                    <span class="review-author-name">Você</span>
+                    <span class="review-author-name">${game.userName || 'Usuário Desconhecido'}</span>
                     <span class="review-stars">${starsHTML}</span>
                 </div>
                 <p class="review-text">"${game.review}"</p>
@@ -190,3 +309,7 @@ function renderReviews() {
         reviewsContainer.appendChild(reviewEl);
     });
 }
+
+updateHeader();
+renderGames();
+renderReviews();
